@@ -16,9 +16,9 @@ class TwoFactorMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
-        
+
         if (auth()->check() && $user->two_factor_code) {
-            
+
                 if ($user->two_factor_expires_at < now()) {
                     $user->resetTwoFactorCode();
                     auth()->logout();
@@ -26,12 +26,12 @@ class TwoFactorMiddleware
                         ->withStatus('Your verification code expired. Please re-login.');
                 }
                 if (!$request->is('verify*')) {
-                    
+
                     return redirect()->route('verify.index');
                 }
         }
         // dd($request);
         return $next($request);
-        
+
     }
 }
